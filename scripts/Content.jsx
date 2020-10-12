@@ -18,7 +18,7 @@ export function Content() {
     }
     
     function updateAddresses(data) {
-        console.log("Received addresses from server: " + data['allAddresses']);
+        console.log("Received messages from server: " + data['allAddresses']);
         setAddresses(data['allAddresses']);
     }
     
