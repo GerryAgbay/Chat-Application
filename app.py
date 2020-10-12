@@ -53,7 +53,7 @@ def on_connect():
     global count
     count += 1
     
-    socketio.emit('status', {'count': count}, broadcast=True)
+    socketio.emit('status', {'count': count})
     socketio.emit('connected', { 'test': 'Connected'})
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
@@ -62,6 +62,10 @@ def on_connect():
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
+    
+    global count
+    count -= 1
+    socketio.emit('status', {'count': count})
     
 
 @socketio.on('new message input')
