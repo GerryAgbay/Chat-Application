@@ -6,14 +6,14 @@ import { Button } from './Button';
 import { Socket } from './Socket';
 
 export function Content() {
-    const [addresses, setAddresses] = React.useState([]);
+    const [messages, setMessages] = React.useState([]);
     const [userCount, setUserCount] = React.useState(0);
     
-    function getNewAddresses() {
+    function getNewMessages() {
         React.useEffect(() => {
-            Socket.on('messages received', updateAddresses);
+            Socket.on('messages received', updateMessages);
             return () => {
-                Socket.off('messages received', updateAddresses);
+                Socket.off('messages received', updateMessages);
             }
         });
     }
@@ -27,9 +27,9 @@ export function Content() {
         });
     }
     
-    function updateAddresses(data) {
-        console.log("Received messages from server: " + data['allAddresses']);
-        setAddresses(data['allAddresses']);
+    function updateMessages(data) {
+        console.log("Received messages from server: " + data['allMessages']);
+        setMessages(data['allMessages']);
     }
     
     function updateUserCount(data) {
@@ -37,7 +37,7 @@ export function Content() {
         setUserCount(data['count']);
     }
     
-    getNewAddresses();
+    getNewMessages();
     getUserCount();
 
     return (
@@ -46,8 +46,8 @@ export function Content() {
             <h2>number of users: {userCount}</h2>
                 <ol>
                     {
-                        addresses.map(
-                        (address, index) => <li key={index}>{address}</li>)
+                        messages.map(
+                        (message, index) => <li key={index}>{message}</li>)
                     }
                 </ol>
             <Button />

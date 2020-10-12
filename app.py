@@ -36,12 +36,12 @@ db.create_all()
 db.session.commit()
 
 def emit_all_messages(channel):
-    all_addresses = [ \
+    all_messages = [ \
         db_address.address for db_address in \
         db.session.query(models.Usps).all()]
         
     socketio.emit(channel, {
-        'allAddresses': all_addresses
+        'allMessages': all_messages
     })
     
 count = 0
