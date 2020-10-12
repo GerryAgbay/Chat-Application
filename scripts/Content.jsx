@@ -10,9 +10,9 @@ export function Content() {
     
     function getNewAddresses() {
         React.useEffect(() => {
-            Socket.on('addresses received', updateAddresses);
+            Socket.on('messages received', updateAddresses);
             return () => {
-                Socket.off('addresses received', updateAddresses);
+                Socket.off('messages received', updateAddresses);
             }
         });
     }
