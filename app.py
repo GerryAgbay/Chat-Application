@@ -6,6 +6,7 @@ import flask
 import flask_sqlalchemy
 import flask_socketio
 import models 
+from flask import request
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 
@@ -34,8 +35,7 @@ db.app = app
 db.create_all()
 db.session.commit()
 
-def emit_all_addresses(channel):
-    # TODO - Content.jsx is looking for a key called allAddresses, so we want to emit to allAddresses
+def emit_all_messages(channel):
     all_addresses = [ \
         db_address.address for db_address in \
         db.session.query(models.Usps).all()]
@@ -43,33 +43,39 @@ def emit_all_addresses(channel):
     socketio.emit(channel, {
         'allAddresses': all_addresses
     })
+    
+count = 0
 
 @socketio.on('connect')
 def on_connect():
     print('Someone connected!')
-    socketio.emit('connected', {
-        'test': 'Connected'
-    })
     
-    emit_all_addresses(MESSAGES_RECEIVED_CHANNEL)
+    global count
+    count += 1
+    
+    socketio.emit('status', {'count': count}, broadcast=True)
+    socketio.emit('connected', { 'test': 'Connected'})
+    
+    emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
 
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
+    
 
 @socketio.on('new message input')
 def on_new_address(data):
     print("Got an event for new message input with data:", data)
     
-    db.session.add(models.Usps(data["address"]));
+    db.session.add(models.Usps(request.sid + ": " + data["message"]));
     db.session.commit();
     
-    emit_all_addresses(MESSAGES_RECEIVED_CHANNEL)
+    emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 @app.route('/')
 def index():
-    emit_all_addresses(MESSAGES_RECEIVED_CHANNEL)
+    emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
     return flask.render_template("index.html")
 
