@@ -44,13 +44,15 @@ export function Content() {
         <div>
             <h1>CHAT APP</h1>
             <h2>number of users: {userCount}</h2>
-                <ol>
+            <div class = "scroll-box">
+                <ol class = "display-messages">
                     {
                         messages.map(
                         (message, index) => <li key={index}>{message}</li>)
                     }
                 </ol>
-            <Button />
+            </div>
+                <Button />
         </div>
     );
 }
