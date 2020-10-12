@@ -40,9 +40,7 @@ def emit_all_messages(channel):
         db_address.address for db_address in \
         db.session.query(models.Usps).all()]
         
-    socketio.emit(channel, {
-        'allMessages': all_messages
-    })
+    socketio.emit(channel, { 'allMessages': all_messages })
     
 count = 0
 
@@ -76,6 +74,27 @@ def on_new_address(data):
     db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+    BotParse(data)
+    
+def BotParse(data):
+    #print(data["message"])
+    inputString = data["message"]
+    inputList = inputString.split(" ")
+    print(inputList)
+    botName = "Bot"
+    
+    if (inputList[0] == "!!") and (inputList[1] == "about"):
+        botMsg = "My name is Bot. I am a chat bot that has different functionalities. Type '!! help' to learn my commands."
+        db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+        db.session.commit();
+        emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+        
+    elif (inputList[0] == "!!") and (inputList[1] == "help"):
+        botMsg = "Here is a list of my commands: ".upper() + "[!! about, !! help, !! funtranslate <message>]"
+        db.session.add(models.Usps(botName.upper() + ": " + botMsg));
+        db.session.commit();
+        emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+        
 
 @app.route('/')
 def index():

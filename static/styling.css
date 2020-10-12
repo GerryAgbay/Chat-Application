@@ -18,6 +18,9 @@ h2 {
 
 .display-messages {
     list-style-type: none;
+    font-size: 8pt;
+    font-size: 1vw;
+    font-family: Courier;
     margin: 0;
     padding: 0;
 }
@@ -28,10 +31,12 @@ h2 {
     background: #f4f4f4;
     border: 2px solid;
     border-color: #5F9EA0;
-    height: 50%;
-    width: 60%;
+    height: 65%;
+    width: 70%;
     padding: 10px;
     overflow-y: scroll;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .input-message {
