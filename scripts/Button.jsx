@@ -16,8 +16,8 @@ function handleSubmit(event) {
 export function Button() {
     return (
         <form onSubmit={handleSubmit}>
-            <input id="address_input" placeholder="Enter a USPS address"></input>
-            <button>Add to DB!</button>
+            <input id="address_input" placeholder="Enter message"></input>
+            <button>Submit</button>
         </form>
     );
 }
