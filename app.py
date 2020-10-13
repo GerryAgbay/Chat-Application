@@ -9,6 +9,7 @@ import models
 from flask import request
 import json
 import requests
+import random
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 
@@ -105,7 +106,7 @@ def botParse(data):
             botDB(botName, botMsg)
         
         elif (inputList[1] == "help") or (inputList[1] == "HELP"):
-            botMsg = "Here is a list of my commands: [!! about, !! help, !! funtranslate <message>]"
+            botMsg = "Here is a list of my commands: [!! about, !! help, !! funtranslate <message>, !! randint <min> <max>]"
             botDB(botName, botMsg)
             
         elif (inputList[1] == "funtranslate") or (inputList[1] == "FUNTRANSLATE"):
@@ -124,7 +125,11 @@ def botParse(data):
                 error_msg = translate_dictionary["error"]["message"]
                 botMsg = error_msg
                 botDB(botName, botMsg)
-            
+                
+        elif (inputList[1] == "randint" and isinstance(int(inputList[2]), int) and isinstance(int(inputList[3]), int)):
+            integer = random.randint(int(inputList[2]), int(inputList[3]))
+            botMsg = "Your random integer is: " + str(integer)
+            botDB(botName, botMsg)
         else:
             botMsg = "Sorry, I don't recognize that command. Enter '!! help' to get a list of my commands."
             botDB(botName, botMsg)
