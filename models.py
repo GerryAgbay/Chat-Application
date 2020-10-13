@@ -1,15 +1,13 @@
-# models.py
 import flask_sqlalchemy
 from app import db
 
 
-class Usps(db.Model):
+class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    address = db.Column(db.String(500))
+    chat_message = db.Column(db.String(500))
     
     def __init__(self, a):
-        self.address = a
+        self.chat_message = a
         
     def __repr__(self):
-        return '<Usps address: %s>' % self.address 
-
+        return '<Chat message: %s>' % self.chat_message 

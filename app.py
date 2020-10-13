@@ -1,4 +1,3 @@
-# app.py
 from os.path import join, dirname
 from dotenv import load_dotenv
 import os
@@ -10,7 +9,6 @@ from flask import request
 import json
 import requests
 import random
-import time
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 
@@ -42,8 +40,8 @@ db.session.commit()
 
 def emit_all_messages(channel):
     all_messages = [ \
-        db_address.address for db_address in \
-        db.session.query(models.Usps).all()]
+        db_message.chat_message for db_message in \
+        db.session.query(models.Chat).all()]
         
     socketio.emit(channel, { 'allMessages': all_messages })
     
@@ -76,25 +74,22 @@ def on_disconnect():
 def on_new_address(data):
     print("Got an event for new message input with data:", data)
     
-    db.session.add(models.Usps(request.sid + ": " + data["message"]));
+    db.session.add(models.Chat(request.sid + ": " + data["message"]));
     db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
-    botParse(data)
+    bot(data)
     
     
 def botDB(botName, botMsg):
-    db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+    db.session.add(models.Chat(botName.upper() + ": " + botMsg.upper()));
     db.session.commit();
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
     
-def botParse(data):
-    #print(data)
+def bot(data):
     inputString = data["message"]
-    #print(inputString[16:])
     inputList = inputString.split(" ")
-
     botName = "Bot"
     
     if (inputList[0] == "!!"):
@@ -114,7 +109,6 @@ def botParse(data):
             translate_url = "https://api.funtranslations.com/translate/dothraki.json?text=" + inputString[16:]
             translate_response = requests.request("GET", translate_url)
             translate_dictionary = translate_response.json()
-            #print(translate_dictionary)
                 
             if ("contents" in translate_dictionary.keys()):
                 translate_contents = translate_dictionary["contents"]
