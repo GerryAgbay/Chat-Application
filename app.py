@@ -113,16 +113,16 @@ def botParse(data):
             translate_response = requests.request("GET", translate_url)
             translate_dictionary = translate_response.json()
             #print(translate_dictionary)
-            
-            if (translate_dictionary["error"]):
-                error_msg = translate_dictionary["error"]["message"]
-                botMsg = error_msg
-                botDB(botName, botMsg)
                 
-            else:
+            if ("contents" in translate_dictionary.keys()):
                 translate_contents = translate_dictionary["contents"]
                 translated = translate_contents["translated"]
                 botMsg = "Dothraki Translation: " + translated
+                botDB(botName, botMsg)
+                
+            elif ("error" in translate_dictionary.keys()):
+                error_msg = translate_dictionary["error"]["message"]
+                botMsg = error_msg
                 botDB(botName, botMsg)
             
         else:
