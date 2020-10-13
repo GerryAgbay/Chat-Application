@@ -7,6 +7,8 @@ import flask_sqlalchemy
 import flask_socketio
 import models 
 from flask import request
+import json
+import requests
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 
@@ -77,23 +79,53 @@ def on_new_address(data):
     BotParse(data)
     
 def BotParse(data):
-    #print(data["message"])
+    #print(data)
     inputString = data["message"]
+    #print(inputString[16:])
     inputList = inputString.split(" ")
-    print(inputList)
+
     botName = "Bot"
     
-    if (inputList[0] == "!!") and (inputList[1] == "about"):
-        botMsg = "My name is Bot. I am a chat bot that has different functionalities. Type '!! help' to learn my commands."
-        db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
-        db.session.commit();
-        emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+    if (inputList[0] == "!!"):
+        if (inputList[1] == "about") or (inputList[1] == "ABOUT"):
+            botMsg = "My name is Bot. I am a chat bot that has different functionalities. Enter '!! help' to get a list of my commands."
+            db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+            db.session.commit();
+            emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
         
-    elif (inputList[0] == "!!") and (inputList[1] == "help"):
-        botMsg = "Here is a list of my commands: ".upper() + "[!! about, !! help, !! funtranslate <message>]"
-        db.session.add(models.Usps(botName.upper() + ": " + botMsg));
-        db.session.commit();
-        emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+        elif (inputList[1] == "help") or (inputList[1] == "HELP"):
+            botMsg = "Here is a list of my commands: [!! about, !! help, !! funtranslate <message>]"
+            db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+            db.session.commit();
+            emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+            
+        elif (inputList[1] == "funtranslate") or (inputList[1] == "FUNTRANSLATE"):
+            translate_url = "https://api.funtranslations.com/translate/dothraki.json?text=" + inputString[16:]
+            translate_response = requests.request("GET", translate_url)
+            translate_dictionary = translate_response.json()
+            #print(translate_dictionary)
+            
+            if (translate_dictionary["error"]):
+                error_msg = translate_dictionary["error"]["message"]
+                botMsg = error_msg
+                db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+                db.session.commit();
+                emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+                
+            else:
+                translate_contents = translate_dictionary["contents"]
+                translated = translate_contents["translated"]
+            
+                botMsg = "Dothraki Translation: " + translated
+                db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+                db.session.commit();
+                emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+            
+        else:
+            botMsg = "Sorry, I don't recognize that command. Enter '!! help' to get a list of my commands."
+            db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+            db.session.commit();
+            emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
         
 
 @app.route('/')
