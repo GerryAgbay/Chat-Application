@@ -1,3 +1,6 @@
+body {
+    background-color: #FFE4E1;
+}
 h1 {
     font-family: Courier;
     color: #000000;
@@ -28,7 +31,7 @@ h2 {
 .scroll-box {
     text-align: left;
     margin: auto;
-    background: #f4f4f4;
+    background-color: #FFF8DC;
     border: 2px solid;
     border-color: #5F9EA0;
     height: 65%;
@@ -42,8 +45,9 @@ h2 {
 .input-message {
     font-family: Courier;
     font-size: 12pt;
+    font-size: 1vw;
     margin: 0;
-    background: #f4f4f4;
+    background-color: #F0FFFF;
     border: 2px solid;
     width: 45%;
     line-height: 2em;
@@ -52,8 +56,9 @@ h2 {
 .send-button {
     font-family: Courier;
     font-size: 12pt;
+    font-size: 1vw;
     margin: 0;
-    background: #f4f4f4;
+    background-color: #B0E0E6;
     border: 2px solid;
     width: 5%;
     line-height: 2em;
