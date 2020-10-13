@@ -10,6 +10,7 @@ from flask import request
 import json
 import requests
 import random
+import time
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 
@@ -126,10 +127,27 @@ def botParse(data):
                 botMsg = error_msg
                 botDB(botName, botMsg)
                 
-        elif (inputList[1] == "randint" and isinstance(int(inputList[2]), int) and isinstance(int(inputList[3]), int)):
+        elif (inputList[1] == "randint") or (inputList[1] == "RANDINT") and isinstance(int(inputList[2]), int) and isinstance(int(inputList[3]), int):
             integer = random.randint(int(inputList[2]), int(inputList[3]))
             botMsg = "Your random integer is: " + str(integer)
             botDB(botName, botMsg)
+            
+        elif (inputList[1] == "randjoke") or (inputList[1] == "RANDJOKE"):
+            joke_url = "https://sv443.net/jokeapi/v2/joke/Any?"
+            joke_response = requests.request("GET", joke_url)
+            joke_dictionary = joke_response.json()
+            print(joke_dictionary)
+            
+            if ("joke" in joke_dictionary.keys()):
+                joke_contents = joke_dictionary["joke"]
+                botMsg = "Joke: " + joke_contents
+                botDB(botName, botMsg)
+                
+            elif ("setup" in joke_dictionary.keys()):
+                joke_setup = joke_dictionary["setup"] + " " + joke_dictionary["delivery"]
+                botMsg = joke_setup
+                botDB(botName, botMsg)
+            
         else:
             botMsg = "Sorry, I don't recognize that command. Enter '!! help' to get a list of my commands."
             botDB(botName, botMsg)

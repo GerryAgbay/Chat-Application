@@ -5,7 +5,7 @@ from app import db
 
 class Usps(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    address = db.Column(db.String(120))
+    address = db.Column(db.String(500))
     
     def __init__(self, a):
         self.address = a
