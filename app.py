@@ -37,6 +37,7 @@ db.app = app
 db.create_all()
 db.session.commit()
 
+
 def emit_all_messages(channel):
     all_messages = [ \
         db_address.address for db_address in \
@@ -45,6 +46,7 @@ def emit_all_messages(channel):
     socketio.emit(channel, { 'allMessages': all_messages })
     
 count = 0
+
 
 @socketio.on('connect')
 def on_connect():
@@ -58,7 +60,7 @@ def on_connect():
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
-
+    
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
@@ -76,9 +78,16 @@ def on_new_address(data):
     db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
-    BotParse(data)
+    botParse(data)
     
-def BotParse(data):
+    
+def botDB(botName, botMsg):
+    db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
+    db.session.commit();
+    emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+    
+    
+def botParse(data):
     #print(data)
     inputString = data["message"]
     #print(inputString[16:])
@@ -87,17 +96,17 @@ def BotParse(data):
     botName = "Bot"
     
     if (inputList[0] == "!!"):
+        if (len(inputList) == 1):
+            botMsg = "Sorry, I don't recognize that command. Enter '!! help' to get a list of my commands."
+            botDB(botName, botMsg)
+            
         if (inputList[1] == "about") or (inputList[1] == "ABOUT"):
             botMsg = "My name is Bot. I am a chat bot that has different functionalities. Enter '!! help' to get a list of my commands."
-            db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
-            db.session.commit();
-            emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+            botDB(botName, botMsg)
         
         elif (inputList[1] == "help") or (inputList[1] == "HELP"):
             botMsg = "Here is a list of my commands: [!! about, !! help, !! funtranslate <message>]"
-            db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
-            db.session.commit();
-            emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+            botDB(botName, botMsg)
             
         elif (inputList[1] == "funtranslate") or (inputList[1] == "FUNTRANSLATE"):
             translate_url = "https://api.funtranslations.com/translate/dothraki.json?text=" + inputString[16:]
@@ -108,25 +117,18 @@ def BotParse(data):
             if (translate_dictionary["error"]):
                 error_msg = translate_dictionary["error"]["message"]
                 botMsg = error_msg
-                db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
-                db.session.commit();
-                emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+                botDB(botName, botMsg)
                 
             else:
                 translate_contents = translate_dictionary["contents"]
                 translated = translate_contents["translated"]
-            
                 botMsg = "Dothraki Translation: " + translated
-                db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
-                db.session.commit();
-                emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+                botDB(botName, botMsg)
             
         else:
             botMsg = "Sorry, I don't recognize that command. Enter '!! help' to get a list of my commands."
-            db.session.add(models.Usps(botName.upper() + ": " + botMsg.upper()));
-            db.session.commit();
-            emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
-        
+            botDB(botName, botMsg)
+
 
 @app.route('/')
 def index():
