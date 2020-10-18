@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button } from './Button';
 import { Socket } from './Socket';
+import { GoogleButton } from './GoogleButton';
 
 export function Content() {
     const [messages, setMessages] = React.useState([]);
@@ -40,7 +41,10 @@ export function Content() {
     return (
         <div>
             <h1>CHAT APP</h1>
-            <h2>number of users: {userCount}</h2>
+            <div class = "header">
+                <div class = "google-button"><GoogleButton /></div>
+                <div class = "num-users">number of users: {userCount}</div>
+            </div>
             <div class = "scroll-box">
                 <ol class = "display-messages">
                     {

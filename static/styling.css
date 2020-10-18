@@ -1,6 +1,7 @@
 body {
     background-color: #FFE4E1;
 }
+
 h1 {
     font-family: Courier;
     color: #000000;
@@ -8,15 +9,28 @@ h1 {
     font-size: 3.5vw;
     text-align: center;
     margin: 0;
+    padding: 0;
 }
 
-h2 {
+.header {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 3%;
+    
+}
+
+.google-button {
+    float: left;
+    font-size: 5vw;
+}
+
+.num-users {
+    float: right;
     font-family: Courier;
     color: #000000;
     font-size: 22pt;
     font-size: 2vw;
     font-weight: normal;
-    text-align: center;
 }
 
 .display-messages {
