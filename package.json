@@ -30,6 +30,8 @@
     ]
   },
   "dependencies": {
+    "is-image-url": "^1.1.8",
+    "is-url": "^1.2.4",
     "react-google-login": "^5.1.21",
     "socket.io-client": "^2.3.1"
   }

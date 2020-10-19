@@ -7,7 +7,7 @@ import flask_socketio
 import models 
 from flask import request
 from chatBot import bot
-
+import re
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 
@@ -37,7 +37,9 @@ def emit_all_messages(channel):
         db_message.chat_message for db_message in \
         db.session.query(models.Chat).all()]
         
+    #socketio.send(channel, all_messages)
     socketio.emit(channel, { 'allMessages': all_messages })
+    print(all_messages)
     
     
 def push_new_user_to_db(name, auth_type, email, sid):
@@ -46,6 +48,22 @@ def push_new_user_to_db(name, auth_type, email, sid):
         db.session.add(models.AuthUser(name, auth_type, email, sid));
         db.session.commit();
 
+
+def findUrl(data):
+    item = data["message"]
+    r_url = re.compile(r"^https?:")
+    r_image = re.compile(r".*\.(jpg|png|gif)$")
+    linkList = []
+    imageList = []
+    if r_url.match(item):
+        if r_image.match(item):
+            imageList.append(item)
+            db.session.add(models.Chat(item, request.sid));
+            db.session.commit();
+        else:
+            db.session.add(models.Chat(item, request.sid));
+            db.session.commit();
+                
 
 @socketio.on('connect')
 def on_connect():
@@ -84,14 +102,16 @@ def on_disconnect():
     
 
 @socketio.on('new message input')
-def on_new_address(data):
+def on_new_message(data):
     print("Got an event for new message input with data:", data)
     user = [ \
         db_user.name for db_user in \
         db.session.query(models.AuthUser).filter_by(sid=request.sid)]
+    
     db.session.add(models.Chat(user[len(user)-1] + ": " + data["message"], request.sid));
     db.session.commit();
     
+    findUrl(data)
     bot(data)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
