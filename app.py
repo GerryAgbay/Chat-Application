@@ -39,6 +39,13 @@ def emit_all_messages(channel):
         
     socketio.emit(channel, { 'allMessages': all_messages })
     
+    
+def push_new_user_to_db(name, auth_type, email, sid):
+    # TODO remove this check after the logic works correctly
+    if name != "John Doe":
+        db.session.add(models.AuthUser(name, auth_type, email, sid));
+        db.session.commit();
+    
 count = 0
 
 
@@ -55,6 +62,12 @@ def on_connect():
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
     
+@socketio.on('new google user')
+def on_new_google_user(data):
+    print("Got an event for new google user input with data:", data)
+    push_new_user_to_db(data['name'], models.AuthUserType.GOOGLE, data['email'], request.sid)
+    
+    
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
@@ -67,8 +80,10 @@ def on_disconnect():
 @socketio.on('new message input')
 def on_new_address(data):
     print("Got an event for new message input with data:", data)
-    
-    db.session.add(models.Chat(request.sid + ": " + data["message"]));
+    user = [ \
+        db_user.name for db_user in \
+        db.session.query(models.AuthUser).filter_by(sid=request.sid)]
+    db.session.add(models.Chat(user[len(user)-1] + ": " + data["message"], request.sid));
     db.session.commit();
     
     bot(data)

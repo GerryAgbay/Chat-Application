@@ -2,10 +2,11 @@ import app
 from app import models
 import requests
 import random
+from flask import request
 
 
 def botDB(botName, botMsg):
-    app.db.session.add(models.Chat(botName.upper() + ": " + botMsg.upper()));
+    app.db.session.add(models.Chat(botName.upper() + ": " + botMsg.upper(), request.sid));
     app.db.session.commit();
     
     
