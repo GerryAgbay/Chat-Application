@@ -45,16 +45,11 @@ def push_new_user_to_db(name, auth_type, email, sid):
     if name != "John Doe":
         db.session.add(models.AuthUser(name, auth_type, email, sid));
         db.session.commit();
-    
-count = 0
 
 
 @socketio.on('connect')
 def on_connect():
     print('Someone connected!')
-    
-    global count
-    count += 1
     
     socketio.emit('status', {'count': count})
     socketio.emit('connected', { 'test': 'Connected'})
@@ -62,10 +57,17 @@ def on_connect():
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
     
+count = 0    
+
 @socketio.on('new google user')
 def on_new_google_user(data):
     print("Got an event for new google user input with data:", data)
     push_new_user_to_db(data['name'], models.AuthUserType.GOOGLE, data['email'], request.sid)
+    
+    global count
+    count += 1
+    
+    socketio.emit('status', {'count': count})
     
     
 @socketio.on('disconnect')
@@ -73,7 +75,11 @@ def on_disconnect():
     print ('Someone disconnected!')
     
     global count
-    count -= 1
+    if count > 0:
+        count -= 1
+    else:
+        count == 0
+        
     socketio.emit('status', {'count': count})
     
 
