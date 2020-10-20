@@ -28,30 +28,32 @@ export function Content(props) {
     function updateMessages(data) {
         console.log("Received messages from server: " + data['allMessages']);
         setMessages(data['allMessages']);
-        
-        var arrayLength = messages.length;
-        for (var i = 0; i < arrayLength; i++) {
-            if (messages[i].startsWith("https://")) {
-                if(messages[i].endsWith(".jpg") || messages[i].endsWith(".png") || messages[i].endsWith(".gif")) {
+    }
+    
+    function parseMsgs(messageList) {
+        var arrayLength = messageList.length;
+        for (let i = 0; i < arrayLength; i++) {
+            if (messageList[i].startsWith("https://")) {
+                if(messageList[i].endsWith(".jpg") || messageList[i].endsWith(".png") || messageList[i].endsWith(".gif")) {
                     var img = document.createElement('img');
-                    img.src = messages[i];
+                    img.src = messageList[i];
                     document.getElementById("display-messages").appendChild(img);
                 }
                 else {
                     var link = document.createElement('a');
-                    link.href = messages[i];
-                    link.innerHTML = messages[i];
+                    link.href = messageList[i];
+                    link.innerHTML = messageList[i];
                     document.getElementById("display-messages").appendChild(link);
                 }
             }
-            else if (messages[i].startsWith("HALFBOT: ")) {
+            else if (messageList[i].startsWith("HALFBOT: ")) {
                 var botMsg = document.createElement("botMsg");
-                botMsg.innerHTML = "<h3>" + messages[i] + "</h3>";
+                botMsg.innerHTML = "<h3>" + messageList[i] + "</h3>";
                 document.getElementById("display-messages").appendChild(botMsg);
             }
             else {
                 var usrMsg = document.createElement("usrMsg");
-                usrMsg.innerHTML = "<h4>" + messages[i] + "</h4>";
+                usrMsg.innerHTML = "<h4>" + messageList[i] + "</h4>";
                 document.getElementById("display-messages").appendChild(usrMsg);
             }
             
@@ -65,6 +67,7 @@ export function Content(props) {
     
     getNewMessages();
     getUserCount();
+    parseMsgs(messages);
 
     return (
         <div>
