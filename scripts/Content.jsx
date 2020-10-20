@@ -35,21 +35,28 @@ export function Content(props) {
         setUserCount(data['count']);
     }
     
+    var wrapper = document.createElement("div");
+    wrapper.setAttribute("id", "scroll-box");
     function parseMsgs(messageList) {
+        wrapper.style.cssText = "overflow-y:scroll; height:70%; text-align:left; margin:auto; background-color:#FFF8DC; width:70%; display: flex; flex-direction:column-reverse; border: 2px solid; border-color: #5F9EA0;";
+        document.body.appendChild(wrapper);
+
         var x = document.createElement("OL");
         x.setAttribute("id", "display-messages");
-        document.body.appendChild(x);
+        document.getElementById("scroll-box").appendChild(x);
+        
         if (document.getElementById("display-messages").hasChildNodes()) {
             document.getElementById("display-messages").remove();
         }
+        
         var arrayLength = messageList.length;
         for (var i = 0; i < arrayLength; i++) {
             if (messageList[i].startsWith("https://")) {
                 if(messageList[i].endsWith(".jpg") || messageList[i].endsWith(".png") || messageList[i].endsWith(".gif")) {
                     var img = document.createElement('img');
                     img.src = messageList[i];
-                    img.height = "500";
-                    img.width = "800";
+                    img.height = "400";
+                    img.width = "500";
                     document.getElementById("display-messages").appendChild(img);
                 }
                 else {
@@ -69,7 +76,6 @@ export function Content(props) {
                 usrMsg.innerHTML = "<h4>" + messageList[i] + "</h4>";
                 document.getElementById("display-messages").appendChild(usrMsg);
             }
-            
         }
     }
     
@@ -83,9 +89,6 @@ export function Content(props) {
             <div class = "header">
                 <div class = "google-button"><GoogleButton /></div>
                 <div class = "num-users">number of users: {userCount}</div>
-            </div>
-            <div class = "scroll-box">
-                <ol id = "display-messages"></ol>
             </div>
                 <Button />
         </div>
