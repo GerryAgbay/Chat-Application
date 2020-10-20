@@ -99,11 +99,12 @@ a {
 
 h3 {
     list-style-type: none;
-    font-size: 8pt;
+    font-size: 10pt;
     font-size: 1vw;
     font-family: Courier;
     margin: 2;
     padding: 0;
+    color: #A52A2A;
 }
 
 h4 {
