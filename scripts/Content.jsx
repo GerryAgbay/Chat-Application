@@ -36,6 +36,12 @@ export function Content(props) {
     }
     
     function parseMsgs(messageList) {
+        var x = document.createElement("OL");
+        x.setAttribute("id", "display-messages");
+        document.body.appendChild(x);
+        if (document.getElementById("display-messages").hasChildNodes()) {
+            document.getElementById("display-messages").remove();
+        }
         var arrayLength = messageList.length;
         for (var i = 0; i < arrayLength; i++) {
             if (messageList[i].startsWith("https://")) {

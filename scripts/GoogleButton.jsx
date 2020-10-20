@@ -8,16 +8,20 @@ const responseGoogle = (response) => {
 }
 
 function handleGoogleOAuthSubmit(response) {
-    console.log(response.nt.Wt);
-    console.log(response.nt.Ad);
-    let name = response.nt.Ad;
-    let email = response.nt.Wt;
-    Socket.emit('new google user', 
+    console.log(response);
+    console.log(response.profileObj.givenName);
+    console.log(response.profileObj.email);
+
+    let name = response.profileObj.givenName;
+    let email = response.profileObj.email;
+    
+     Socket.emit('new google user', 
     { 'name': name, 'email': email }
     );
     
     console.log('Sent the name ' + name + ' to server!');
     console.log('Sent the email ' + email + ' to server!');
+    
 }
 
 export function GoogleButton() {
