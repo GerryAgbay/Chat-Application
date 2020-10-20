@@ -39,7 +39,7 @@ def emit_all_messages(channel):
         
     #socketio.send(channel, all_messages)
     socketio.emit(channel, { 'allMessages': all_messages })
-    print(all_messages)
+    #print(all_messages)
     
     
 def push_new_user_to_db(name, auth_type, email, sid):
@@ -50,7 +50,7 @@ def push_new_user_to_db(name, auth_type, email, sid):
 
 
 def findUrl(data):
-    item = data["message"]
+    item = data
     r_url = re.compile(r"^https?:")
     r_image = re.compile(r".*\.(jpg|png|gif)$")
     linkList = []
@@ -96,7 +96,7 @@ def on_disconnect():
     if count > 0:
         count -= 1
     else:
-        count == 0
+        count = 0
         
     socketio.emit('status', {'count': count})
     
@@ -111,7 +111,7 @@ def on_new_message(data):
     db.session.add(models.Chat(user[len(user)-1] + ": " + data["message"], request.sid));
     db.session.commit();
     
-    findUrl(data)
+    findUrl(data["message"])
     bot(data)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 

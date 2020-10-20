@@ -3,7 +3,7 @@ import { Button } from './Button';
 import { Socket } from './Socket';
 import { GoogleButton } from './GoogleButton';
 
-export function Content() {
+export function Content(props) {
     const [messages, setMessages] = React.useState([]);
     const [userCount, setUserCount] = React.useState(0);
     
@@ -12,7 +12,7 @@ export function Content() {
             Socket.on('messages received', updateMessages);
             return () => {
                 Socket.off('messages received', updateMessages);
-            }
+            };
         });
     }
     
@@ -20,32 +20,39 @@ export function Content() {
         React.useEffect(() => {
             Socket.on('status', updateUserCount);
             return () => {
-                Socket.off('status', updateUserCount)
-            }
+                Socket.off('status', updateUserCount);
+            };
         });
     }
     
-    var arrayLength = messages.length;
     function updateMessages(data) {
         console.log("Received messages from server: " + data['allMessages']);
         setMessages(data['allMessages']);
+        
+        var arrayLength = messages.length;
         for (var i = 0; i < arrayLength; i++) {
             if (messages[i].startsWith("https://")) {
-                if (messages[i].endsWith(".jpg") ||  messages[i].endsWith(".png") ||  messages[i].endsWith(".gif")) {
+                if(messages[i].endsWith(".jpg") || messages[i].endsWith(".png") || messages[i].endsWith(".gif")) {
                     var img = document.createElement('img');
                     img.src = messages[i];
                     document.getElementById("display-messages").appendChild(img);
                 }
                 else {
                     var link = document.createElement('a');
-                    link.setAttribute('href', messages[i]);
+                    link.href = messages[i];
                     link.innerHTML = messages[i];
                     document.getElementById("display-messages").appendChild(link);
                 }
-                
             }
             else if (messages[i].startsWith("HALFBOT: ")) {
-                
+                var botMsg = document.createElement("botMsg");
+                botMsg.innerHTML = "<h3>" + messages[i] + "</h3>";
+                document.getElementById("display-messages").appendChild(botMsg);
+            }
+            else {
+                var usrMsg = document.createElement("usrMsg");
+                usrMsg.innerHTML = "<h4>" + messages[i] + "</h4>";
+                document.getElementById("display-messages").appendChild(usrMsg);
             }
             
         }
@@ -68,11 +75,6 @@ export function Content() {
             </div>
             <div class = "scroll-box">
                 <ol id = "display-messages">
-                    {
-                        messages.map(
-                        (message, index) => <li key={index}>{message}</li>)
-                    }
-                    <script type = "text/javascript">updateMessages(messages);</script>
                 </ol>
             </div>
                 <Button />
