@@ -37,14 +37,10 @@ def emit_all_messages(channel):
         db_message.chat_message for db_message in \
         db.session.query(models.Chat).all()]
         
-    #socketio.send(channel, all_messages)
     socketio.emit(channel, { 'allMessages': all_messages })
-    #print(all_messages)
     
     
 def push_new_user_to_db(name, auth_type, email, sid):
-    # TODO remove this check after the logic works correctly
-    if name != "John Doe":
         db.session.add(models.AuthUser(name, auth_type, email, sid));
         db.session.commit();
 
@@ -53,11 +49,8 @@ def findUrl(data):
     item = data
     r_url = re.compile(r"^https?:")
     r_image = re.compile(r".*\.(jpg|png|gif)$")
-    linkList = []
-    imageList = []
     if r_url.match(item):
         if r_image.match(item):
-            imageList.append(item)
             db.session.add(models.Chat(item, request.sid));
             db.session.commit();
         else:

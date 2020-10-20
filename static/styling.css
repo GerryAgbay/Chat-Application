@@ -83,3 +83,31 @@ h1 {
     display: flex;
     justify-content: center;
 }
+
+a {
+    list-style-type: none;
+    font-size: 8pt;
+    font-size: 1vw;
+    font-family: Courier;
+    margin: 2;
+    padding: 0;
+}
+
+h3 {
+    list-style-type: none;
+    font-size: 8pt;
+    font-size: 1vw;
+    font-family: Courier;
+    margin: 2;
+    padding: 0;
+}
+
+h4 {
+    list-style-type: none;
+    font-size: 8pt;
+    font-size: 1vw;
+    font-weight: normal;
+    font-family: Courier;
+    margin: 2;
+    padding: 0;
+}

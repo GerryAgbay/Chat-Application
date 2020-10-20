@@ -25,18 +25,31 @@ export function Content(props) {
         });
     }
     
+    function clear(parent) {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    }
+    
     function updateMessages(data) {
         console.log("Received messages from server: " + data['allMessages']);
         setMessages(data['allMessages']);
     }
     
+    function updateUserCount(data) {
+        console.log("Received user count from server: " + data['count']);
+        setUserCount(data['count']);
+    }
+    
     function parseMsgs(messageList) {
         var arrayLength = messageList.length;
-        for (let i = 0; i < arrayLength; i++) {
+        for (var i = 0; i < arrayLength; i++) {
             if (messageList[i].startsWith("https://")) {
                 if(messageList[i].endsWith(".jpg") || messageList[i].endsWith(".png") || messageList[i].endsWith(".gif")) {
                     var img = document.createElement('img');
                     img.src = messageList[i];
+                    img.height = "500";
+                    img.width = "800";
                     document.getElementById("display-messages").appendChild(img);
                 }
                 else {
@@ -60,11 +73,6 @@ export function Content(props) {
         }
     }
     
-    function updateUserCount(data) {
-        console.log("Received user count from server: " + data['count']);
-        setUserCount(data['count']);
-    }
-    
     getNewMessages();
     getUserCount();
     parseMsgs(messages);
@@ -77,8 +85,7 @@ export function Content(props) {
                 <div class = "num-users">number of users: {userCount}</div>
             </div>
             <div class = "scroll-box">
-                <ol id = "display-messages">
-                </ol>
+                <ol id = "display-messages"></ol>
             </div>
                 <Button />
         </div>
