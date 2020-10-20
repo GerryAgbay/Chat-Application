@@ -25,12 +25,6 @@ export function Content(props) {
         });
     }
     
-    function clear(parent) {
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
-        }
-    }
-    
     function updateMessages(data) {
         console.log("Received messages from server: " + data['allMessages']);
         setMessages(data['allMessages']);
