@@ -3,7 +3,7 @@ import sys
 #import chatBot
 from chatBot import bot
 import chatBot
-#ort bot
+#import bot
 #from bot import inputString
 import unittest
 
