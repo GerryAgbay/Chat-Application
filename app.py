@@ -4,9 +4,7 @@ import os
 import flask
 import flask_sqlalchemy
 import flask_socketio
-import models 
 from flask import request
-from chatBot import bot
 import re
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
@@ -30,6 +28,8 @@ db.app = app
 
 db.create_all()
 db.session.commit()
+
+import models
 
 
 def emit_all_messages(channel):
@@ -105,7 +105,13 @@ def on_new_message(data):
     db.session.commit();
     
     findUrl(data["message"])
-    bot(data)
+    
+    from chatBot import bot
+    if bot(data):
+        botName = "Halfbot"
+        db.session.add(models.Chat(botName.upper() + ": " + bot(data).upper(), request.sid));
+        db.session.commit();
+    
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 
