@@ -4,7 +4,6 @@ import sys
 from chatBot import bot
 import chatBot
 #import bot
-#from bot import inputString
 import unittest
 
 KEY_INPUT = "input_message"

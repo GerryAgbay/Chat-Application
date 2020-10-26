@@ -35,8 +35,10 @@ def bot(data):
             
         elif (inputList[1] == "funtranslate") or (inputList[1] == "FUNTRANSLATE") or (inputList[1] == "Funtranslate"):
             translate_url = "https://api.funtranslations.com/translate/dothraki.json?text=" + inputString[16:]
-            translate_response = requests.request("GET", translate_url)
+            translate_response = requests.get(translate_url)
+            #print (translate_response)
             translate_dictionary = translate_response.json()
+            #print(translate_dictionary)
                 
             if ("contents" in translate_dictionary.keys()):
                 translate_contents = translate_dictionary["contents"]
