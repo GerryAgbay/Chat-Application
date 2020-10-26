@@ -1,8 +1,9 @@
 import sys
 #sys.path.append('../')
-#import chatBot
-from chatBot import bot
+sys.path.insert(1, "../")
 import chatBot
+from chatBot import bot
+#import chatBot
 #import bot
 #from bot import inputString
 import unittest
