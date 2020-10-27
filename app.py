@@ -44,16 +44,13 @@ def push_new_user_to_db(name, auth_type, email, sid):
         db.session.commit();
 
 
-def findUrl(data):
+def findUrl(data, sid):
     item = data
+    user_sid = sid
     r_url = re.compile(r"^https?:")
     r_image = re.compile(r".*\.(jpg|png|gif)$")
-    if r_url.match(item):
-        if r_image.match(item):
-            db.session.add(models.Chat(item, request.sid));
-            db.session.commit();
-        else:
-            db.session.add(models.Chat(item, request.sid));
+    if r_url.match(item) or r_image.match(item):
+            db.session.add(models.Chat(item, user_sid));
             db.session.commit();
                 
 
@@ -72,12 +69,15 @@ count = 0
 @socketio.on('new google user')
 def on_new_google_user(data):
     print("Got an event for new google user input with data:", data)
-    push_new_user_to_db(data['name'], models.AuthUserType.GOOGLE, data['email'], request.sid)
     
     global count
     count += 1
     
     socketio.emit('status', {'count': count})
+
+@socketio.on('new google user 2')
+def on_new_google_user_2(data):
+    push_new_user_to_db(data['name'], models.AuthUserType.GOOGLE, data['email'], request.sid)
     
     
 @socketio.on('disconnect')
@@ -103,7 +103,7 @@ def on_new_message(data):
     db.session.add(models.Chat(user[len(user)-1] + ": " + data["message"], request.sid));
     db.session.commit();
     
-    findUrl(data["message"])
+    findUrl(data["message"], request.sid)
     
     from chatBot import bot
     if bot(data):

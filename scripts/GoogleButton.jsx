@@ -15,7 +15,11 @@ function handleGoogleOAuthSubmit(response) {
     let name = response.profileObj.givenName;
     let email = response.profileObj.email;
     
-     Socket.emit('new google user', 
+    Socket.emit('new google user', 
+    { 'name': name, 'email': email }
+    );
+    
+    Socket.emit('new google user 2',
     { 'name': name, 'email': email }
     );
     
