@@ -1,10 +1,8 @@
+from os.path import dirname, join
 import sys
-#sys.path.append('../')
-sys.path.insert(1, "../")
-import chatBot
+sys.path.append(join(dirname(__file__), '../'))
 from chatBot import bot
-#import chatBot
-#import bot
+import chatBot
 import unittest
 
 KEY_INPUT = "input_message"
