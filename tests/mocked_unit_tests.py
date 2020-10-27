@@ -1,16 +1,14 @@
+from os.path import dirname, join
 import sys
-#sys.path.append('../')
-sys.path.insert(1, "../")
-import chatBot
+sys.path.append(join(dirname(__file__), '../'))
 from chatBot import bot
+import chatBot
+import unittest
 import app
 from app import push_new_user_to_db
-#import bot
-#from bot import inputString
 import unittest
 import unittest.mock as mock
 from unittest.mock import patch
-from unittest.mock import create_autospec
 import requests
 import models
 

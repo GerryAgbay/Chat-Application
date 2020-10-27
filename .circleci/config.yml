@@ -14,6 +14,9 @@ jobs:
       - run:
           command: python ./tests/unmocked_unit_tests.py
           name: Unmocked Tests
+      - run:
+          command: python ./tests/mocked_unit_tests.py
+          name: Mocked Tests
 
 workflows:
   main:
