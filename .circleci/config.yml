@@ -12,6 +12,9 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
+          command: npm run watch
+          name: Npm
+      - run:
           command: python ./tests/unmocked_unit_tests.py
           name: Unmocked Tests
       - run:
