@@ -208,7 +208,6 @@ class Test_Push(unittest.TestCase):
                 },
                 KEY_EXPECTED : {
                     EMIT_KEY : None,
-                    EMIT_DATA : {'count' : 3}
                 }
             }
         ]
@@ -233,7 +232,6 @@ class Test_On_New_Google_User(unittest.TestCase):
                     "email" : "gerryagbayjr@gmail.com"},
                 KEY_EXPECTED : {
                     EMIT_KEY : 'status',
-                    EMIT_DATA : {'count' : 3}
                 }
             }
         ]
@@ -245,9 +243,9 @@ class Test_On_New_Google_User(unittest.TestCase):
         test = self.success_test_params[0]
         with mock.patch('app.socketio.emit', self.mocked_socket):
             response = app.on_new_google_user(test[KEY_INPUT])
-            expected = test[KEY_EXPECTED]
+        expected = test[KEY_EXPECTED]
         
-            self.assertEqual(response, None)
+        self.assertEqual(response, None)
     
 #-------
 
@@ -268,8 +266,7 @@ class Test_Find_Url(unittest.TestCase):
                     "sid" : "12345"
                 },
                 KEY_EXPECTED : {
-                    EMIT_KEY : None,
-                    EMIT_DATA : {'count' : 3}
+                    EMIT_KEY : None
                 }
             }
         ]
@@ -282,6 +279,31 @@ class Test_Find_Url(unittest.TestCase):
             response = app.findUrl(test[KEY_INPUT]["link"], test[KEY_INPUT]["sid"])
         expected = test[KEY_EXPECTED]
         self.assertEqual(response, expected[EMIT_KEY])
+        
+#-------
+
+class Test_On_Disconnect(unittest.TestCase):
+    def setUp(self):
+        self.success_test_params = [
+            {
+                KEY_INPUT: 1,
+                KEY_EXPECTED : {
+                    EMIT_KEY : 'status',
+                    EMIT_DATA : {'count' : 1}
+                }
+            }
+        ]
+        
+    def mocked_socket(self, key, value):
+        return ({'key' : 'status'}, {'value' : {'count' : 3}})
+        
+    def test_socket_on_connect(self):
+        test = self.success_test_params[0]
+        with mock.patch('app.socketio.emit', self.mocked_socket):
+            response = app.on_disconnect()
+        expected = test[KEY_EXPECTED]
+        
+        self.assertEqual(response, None)
 
     
 if __name__ == '__main__':
