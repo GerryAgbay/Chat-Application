@@ -1,4 +1,4 @@
-import app
+#import app
 from app import models
 import requests
 import random
