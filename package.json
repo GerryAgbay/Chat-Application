@@ -10,9 +10,16 @@
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-react": "^7.0.0",
+    "@typescript-eslint/parser": "^4.6.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.5",
     "css-loader": "^3.4.2",
+    "eslint": "^7.12.1",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
     "jquery": "^3.2.1",
@@ -34,5 +41,22 @@
     "is-url": "^1.2.4",
     "react-google-login": "^5.1.22",
     "socket.io-client": "^2.3.1"
-  }
+  },
+  "name": "project2-m3-gda6",
+  "description": "### This is a real-time chat/messaging app that uses React, Flask, Socket.io, PostgreSQL, and SQLAlchemy. ### It features a chat bot with multiple functionalities, including fun translations using the Fun Translations API and random joke using the Joke API.",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NJIT-CS490/project2-m3-gda6.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NJIT-CS490/project2-m3-gda6/issues"
+  },
+  "homepage": "https://github.com/NJIT-CS490/project2-m3-gda6#readme"
 }

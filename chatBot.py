@@ -21,7 +21,7 @@ def bot(data):
             return botMsg
         
         elif (inputList[1] == "help") or (inputList[1] == "HELP") or (inputList[1] == "Help"):
-            botMsg = "Here's a list of what I know: [!! about, !! help, !! funtranslate <message>, !! randjoke, !! randint <min> <max>]"
+            botMsg = "Here's a list of what I know: [!! about, !! help, !! funtranslate <message>, !! randjoke, !! randint [min int] [max int]]"
             return botMsg
             
         elif (inputList[1] == "funtranslate") or (inputList[1] == "FUNTRANSLATE") or (inputList[1] == "Funtranslate"):
@@ -40,10 +40,21 @@ def bot(data):
                 botMsg = "This is what my sources say: " + error_msg
                 return botMsg
                 
-        elif (inputList[1] == "randint") or (inputList[1] == "RANDINT") or (inputList[1] == "Randint") and isinstance(int(inputList[2]), int) and isinstance(int(inputList[3]), int):
-            integer = random.randint(int(inputList[2]), int(inputList[3]))
-            botMsg = "Here's a random integer: " + str(integer)
-            return botMsg
+        elif (inputList[1] == "randint") or (inputList[1] == "RANDINT") or (inputList[1] == "Randint"):
+            if len(inputList) != 4:
+                botMsg = "Enter two integers like so: !! randint [min int] [max int]"
+                return botMsg
+                
+            else:
+                try:
+                    int(inputList[2]) and int(inputList[3])
+                    integer = random.randint(int(inputList[2]), int(inputList[3]))
+                    botMsg = "Here's a random integer: " + str(integer)
+                    return botMsg
+                    
+                except ValueError:
+                    botMsg = "You didn't enter an integer. Ask by doing: !! randint [min int] [max int]"
+                    return botMsg
             
         elif (inputList[1] == "randjoke") or (inputList[1] == "RANDJOKE") or (inputList[1] == "Randjoke"):
             joke_url = "https://sv443.net/jokeapi/v2/joke/Any?"
