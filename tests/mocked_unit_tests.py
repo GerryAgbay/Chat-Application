@@ -3,17 +3,25 @@ import sys
 sys.path.insert(1, "../")
 import chatBot
 from chatBot import bot
-#import chatBot
+import app
+from app import push_new_user_to_db
 #import bot
 #from bot import inputString
 import unittest
 import unittest.mock as mock
+from unittest.mock import patch
+from unittest.mock import create_autospec
 import requests
+import models
+
 
 
 KEY_INPUT = "input_message"
 KEY_EXPECTED = "expected"
 KEY_BOT_MSG = "return_key"
+KEY_URL = "url"
+EMIT_KEY = "emit"
+EMIT_DATA = "data"
 
 class BotTestRandInt(unittest.TestCase):
     def setUp(self):
@@ -141,7 +149,154 @@ class BotTestRandjoke2(unittest.TestCase):
             response = bot(test1[KEY_INPUT])
         expected = test1[KEY_EXPECTED]
         self.assertEqual(response, expected[KEY_BOT_MSG])
+        
+#-------
 
+class Mocked_socket_emit:
+    def __init__(self, emit_key, emit_value):
+        self.emit_key = emit_key['key']
+        self.emit_value = emit_value['value']
             
+    def json(self):
+        print(self.emit_key)
+        return self.emit_key
+        
+#-------
+
+class Test_On_Connect(unittest.TestCase):
+    def setUp(self):
+        self.success_test_params = [
+            {
+                KEY_INPUT: 3,
+                KEY_EXPECTED : {
+                    EMIT_KEY : 'status',
+                    EMIT_DATA : {'count' : 3}
+                }
+            }
+        ]
+        
+    def mocked_socket(self, key, value):
+        return ({'key' : 'status'}, {'value' : {'count' : 3}})
+        
+    def test_socket_on_connect(self):
+        test = self.success_test_params[0]
+        with mock.patch('app.socketio.emit', self.mocked_socket):
+            response = app.on_connect()
+        expected = test[KEY_EXPECTED]
+        
+        self.assertEqual(response, None)
+        
+#------
+
+class Mocked_Push():
+    def __init__(self, name, auth, email, sid):
+        self.name = name
+        self.auth = auth
+        self.email = email
+        self.sid = sid
+        
+    def json(self):
+        return self.name
+
+class Test_Push(unittest.TestCase):
+    def setUp(self):
+        self.success_test_params = [
+            {
+                KEY_INPUT: {
+                    "name" : "Gerry",
+                    "auth_type" : "Google",
+                    "email" : "gerryagbayjr@gmail.com",
+                    "sid" : "12345"
+                },
+                KEY_EXPECTED : {
+                    EMIT_KEY : None,
+                    EMIT_DATA : {'count' : 3}
+                }
+            }
+        ]
+    def mocked_add(self, name):
+        return Mocked_Push("Gerry", "Google", "gerryagbayjr@gmail.com", "12345")
+        
+    def test_push_user(self):
+        test = self.success_test_params[0]
+        with mock.patch('app.db.session.add', self.mocked_add):
+            response = app.push_new_user_to_db(test[KEY_INPUT]["name"], models.AuthUserType.GOOGLE, test[KEY_INPUT]["email"], test[KEY_INPUT]["sid"])
+        expected = test[KEY_EXPECTED]
+        self.assertEqual(response, expected[EMIT_KEY])
+
+#------
+
+# def mocked_push_new_user_to_db(name, auth, email, sid):
+#         pass
+    
+# mock_function = create_autospec(mocked_push_new_user_to_db, return_value = "pass")
+# class Mocked_Auth:
+#     def __init__(self, auth):
+#         self.auth = auth
+        
+# class Mocked_Push:
+#     def __init__(self, name, auth, email, sid):
+#         self.name = name
+#         self.auth = Mocked_Auth(auth)
+#         self.email = email
+#         self.sid = sid
+
+class Test_On_New_Google_User(unittest.TestCase):
+    def setUp(self):
+        self.success_test_params = [
+            {
+                KEY_INPUT: {
+                    "name" : "Gerry", 
+                    "email" : "gerryagbayjr@gmail.com"},
+                KEY_EXPECTED : {
+                    EMIT_KEY : 'status',
+                    EMIT_DATA : {'count' : 3}
+                }
+            }
+        ]
+        
+#     def mocked_push(self, name, auth, email, sid):
+#         return (Mocked_Push("Gerry", "Google", "gerryagbayjr@gmail.com", "12345"))
+        
+    def mocked_socket(self, key, value):
+        return ({'key' : 'status'}, {'value' : {'count' : 3}})
+        
+#     @mock.patch('app.socketio.emit')
+#     @mock.patch('app.push_new_user_to_db')
+#     def test_on_new_google_user(self, mocked_push, mocked_socket):
+#         test = self.success_test_params[0]
+#         response = app.on_new_google_user(test[KEY_INPUT])
+#         self.assertEqual(response, None)
+    def test_on_new_google_user(self):
+        test = self.success_test_params[0]
+#     #     #with mock.patch('app.socketio.emit', self.mocked_socket):
+        with mock.patch('app.push_new_user_to_db', self.mocked_socket):
+            response = app.on_new_google_user(test[KEY_INPUT])
+            expected = test[KEY_EXPECTED]
+        
+            self.assertEqual(response, None)
+    
+    
+    
+    
+    
+    # @patch('app.socketio.emit')
+    # @patch('app.push_new_user_to_db')
+    # def test_socket_on_connect(self, mocked_push_new_user_to_db, mocked_socket):
+    #     test = self.success_test_params[0]
+    #     app.push_new_user_to_db()
+    #     app.socketio.emit()
+    #     assert mocked_push_new_user_to_db is app.push_new_user_to_db
+    #     assert mocked_socket is app.socketio.emit
+    #     #assert self.mocked_push_new_user_to_db.called
+    #     #assert self.mocked_socket.called
+    #     #with mock.patch('app.push_new_user_to_db', self.mocked_socket):
+    #     response1 = app.push_new_user_to_db(test[KEY_INPUT]["name"], "google", test[KEY_INPUT]["email"], "12345")
+    #     response2 = app.on_new_google_user(test[KEY_INPUT])
+    #     expected = test[KEY_EXPECTED]
+        
+    #     self.assertEqual(response1, True)
+    #     self.assertEqual(response2, None)
+    
 if __name__ == '__main__':
     unittest.main()
