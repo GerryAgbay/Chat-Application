@@ -210,7 +210,6 @@ class Test_On_Connect(unittest.TestCase):
         return ({"key": "status"}, {"value": {"count": 3}})
 
     def test_socket_on_connect(self):
-        test = self.success_test_params[0]
         with mock.patch("app.socketio.emit", self.mocked_socket):
             response = app.on_connect()
 
@@ -312,7 +311,7 @@ class Test_Find_Url(unittest.TestCase):
     def test_push_user(self):
         test = self.success_test_params[0]
         with mock.patch("app.db.session.add", self.mocked_add_2):
-            response = app.findUrl(test[KEY_INPUT]["link"], test[KEY_INPUT]["sid"])
+            response = app.find_url(test[KEY_INPUT]["link"], test[KEY_INPUT]["sid"])
         expected = test[KEY_EXPECTED]
         self.assertEqual(response, expected[EMIT_KEY])
 
@@ -327,7 +326,6 @@ class Test_On_Disconnect(unittest.TestCase):
         return ({"key": "status"}, {"value": {"count": 3}})
 
     def test_socket_on_connect(self):
-        test = self.success_test_params[0]
         with mock.patch("app.socketio.emit", self.mocked_socket):
             response = app.on_disconnect()
 

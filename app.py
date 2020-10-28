@@ -39,7 +39,7 @@ def push_new_user_to_db(name, auth_type, email, sid):
     db.session.commit()
 
 
-def findUrl(data, sid):
+def find_url(data, sid):
     item = data
     user_sid = sid
     r_url = re.compile(r"^https?:")
@@ -116,7 +116,7 @@ def on_new_message_2(data, user, rsid):
     )
     db.session.commit()
 
-    findUrl(data["message"], request_sid)
+    find_url(data["message"], request_sid)
 
 
 def on_new_message_3(data, rsid):
@@ -125,9 +125,9 @@ def on_new_message_3(data, rsid):
     request_sid = rsid
 
     if bot(data):
-        botName = "Halfbot"
+        bot_name = "Halfbot"
         db.session.add(
-            models.Chat(botName.upper() + ": " + bot(data).upper(), request_sid)
+            models.Chat(bot_name.upper() + ": " + bot(data).upper(), request_sid)
         )
         db.session.commit()
 

@@ -1,47 +1,46 @@
-# import app
-from app import models
-import requests
 import random
+import requests
+from app import models
 from flask import request
 
 
 def bot(data):
-    inputString = data["message"]
-    inputList = inputString.split(" ")
+    input_string = data["message"]
+    input_list = input_string.split(" ")
 
-    if inputList[0] == "!!":
-        if len(inputList) == 1:
-            botMsg = "I'm smart but I don't know everything. Enter '!! help' and try again with something I actually understand."
-            return botMsg
+    if input_list[0] == "!!":
+        if len(input_list) == 1:
+            bot_msg = "I'm smart but I don't know everything. Enter '!! help' and try again with something I actually understand."
+            return bot_msg
 
         if (
-            (inputList[1] == "about")
-            or (inputList[1] == "ABOUT")
-            or (inputList[1] == "About")
+            (input_list[1] == "about")
+            or (input_list[1] == "ABOUT")
+            or (input_list[1] == "About")
         ):
-            botMsg = (
+            bot_msg = (
                 "I'm the Halfbot. I may be stuck here but you know what? If you're going to be a cripple, it's better to be a rich cripple. "
                 + "A mind needs books and everything's better with some wine in the belly. That's what I do: I drink and I know things. "
                 + "If you want to know what you can ask from me, enter '!! help'. I can't make any promises though."
             )
-            return botMsg
+            return bot_msg
 
         elif (
-            (inputList[1] == "help")
-            or (inputList[1] == "HELP")
-            or (inputList[1] == "Help")
+            (input_list[1] == "help")
+            or (input_list[1] == "HELP")
+            or (input_list[1] == "Help")
         ):
-            botMsg = "Here's a list of what I know: [!! about, !! help, !! funtranslate <message>, !! randjoke, !! randint [min int] [max int]]"
-            return botMsg
+            bot_msg = "Here's a list of what I know: [!! about, !! help, !! funtranslate <message>, !! randjoke, !! randint [min int] [max int]]"
+            return bot_msg
 
         elif (
-            (inputList[1] == "funtranslate")
-            or (inputList[1] == "FUNTRANSLATE")
-            or (inputList[1] == "Funtranslate")
+            (input_list[1] == "funtranslate")
+            or (input_list[1] == "FUNTRANSLATE")
+            or (input_list[1] == "Funtranslate")
         ):
             translate_url = (
                 "https://api.funtranslations.com/translate/dothraki.json?text="
-                + inputString[16:]
+                + input_string[16:]
             )
             translate_response = requests.get(translate_url)
             translate_dictionary = translate_response.json()
@@ -49,38 +48,38 @@ def bot(data):
             if "contents" in translate_dictionary.keys():
                 translate_contents = translate_dictionary["contents"]
                 translated = translate_contents["translated"]
-                botMsg = "In Dothraki: " + translated
-                return botMsg
+                bot_msg = "In Dothraki: " + translated
+                return bot_msg
 
             elif "error" in translate_dictionary.keys():
                 error_msg = translate_dictionary["error"]["message"]
-                botMsg = "This is what my sources say: " + error_msg
-                return botMsg
+                bot_msg = "This is what my sources say: " + error_msg
+                return bot_msg
 
         elif (
-            (inputList[1] == "randint")
-            or (inputList[1] == "RANDINT")
-            or (inputList[1] == "Randint")
+            (input_list[1] == "randint")
+            or (input_list[1] == "RANDINT")
+            or (input_list[1] == "Randint")
         ):
-            if len(inputList) != 4:
-                botMsg = "Enter two integers like so: !! randint [min int] [max int]"
-                return botMsg
+            if len(input_list) != 4:
+                bot_msg = "Enter two integers like so: !! randint [min int] [max int]"
+                return bot_msg
 
             else:
                 try:
-                    int(inputList[2]) and int(inputList[3])
-                    integer = random.randint(int(inputList[2]), int(inputList[3]))
-                    botMsg = "Here's a random integer: " + str(integer)
-                    return botMsg
+                    int(input_list[2]) and int(input_list[3])
+                    integer = random.randint(int(input_list[2]), int(input_list[3]))
+                    bot_msg = "Here's a random integer: " + str(integer)
+                    return bot_msg
 
                 except ValueError:
-                    botMsg = "You didn't enter an integer. Ask by doing: !! randint [min int] [max int]"
-                    return botMsg
+                    bot_msg = "You didn't enter an integer. Ask by doing: !! randint [min int] [max int]"
+                    return bot_msg
 
         elif (
-            (inputList[1] == "randjoke")
-            or (inputList[1] == "RANDJOKE")
-            or (inputList[1] == "Randjoke")
+            (input_list[1] == "randjoke")
+            or (input_list[1] == "RANDJOKE")
+            or (input_list[1] == "Randjoke")
         ):
             joke_url = "https://sv443.net/jokeapi/v2/joke/Any?"
             joke_response = requests.get(joke_url)
@@ -88,16 +87,16 @@ def bot(data):
 
             if "joke" in joke_dictionary.keys():
                 joke_contents = joke_dictionary["joke"]
-                botMsg = joke_contents
-                return botMsg
+                bot_msg = joke_contents
+                return bot_msg
 
             elif "setup" in joke_dictionary.keys():
                 joke_setup = (
                     joke_dictionary["setup"] + " " + joke_dictionary["delivery"]
                 )
-                botMsg = joke_setup
-                return botMsg
+                bot_msg = joke_setup
+                return bot_msg
 
         else:
-            botMsg = "I'm smart but I don't know everything. Enter '!! help' and try again with something I actually understand."
-            return botMsg
+            bot_msg = "I'm smart but I don't know everything. Enter '!! help' and try again with something I actually understand."
+            return bot_msg
