@@ -30,9 +30,6 @@ class BotTestEmpty(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class BotTestAbout(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -56,9 +53,6 @@ class BotTestAbout(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class BotTestHelp(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -76,9 +70,6 @@ class BotTestHelp(unittest.TestCase):
             expected = test[KEY_EXPECTED]
 
         self.assertEqual(response, expected[KEY_BOT_MSG])
-
-
-# -------
 
 
 class BotTestWrong(unittest.TestCase):
@@ -100,9 +91,6 @@ class BotTestWrong(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class Bot_Test_Empty_Fail(unittest.TestCase):
     def setUp(self):
         self.fail_test_params = [
@@ -120,9 +108,6 @@ class Bot_Test_Empty_Fail(unittest.TestCase):
             expected = test[KEY_EXPECTED]
 
         self.assertNotEqual(response, expected[KEY_BOT_MSG])
-
-
-# -------
 
 
 class Bot_Test_About_Fail(unittest.TestCase):
@@ -148,9 +133,6 @@ class Bot_Test_About_Fail(unittest.TestCase):
         self.assertNotEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class Bot_Test_Help_Fail(unittest.TestCase):
     def setUp(self):
         self.fail_test_params = [
@@ -168,9 +150,6 @@ class Bot_Test_Help_Fail(unittest.TestCase):
             expected = test[KEY_EXPECTED]
 
         self.assertNotEqual(response, expected[KEY_BOT_MSG])
-
-
-# -------
 
 
 class Bot_Test_Wrong_Fail(unittest.TestCase):
@@ -192,9 +171,6 @@ class Bot_Test_Wrong_Fail(unittest.TestCase):
         self.assertNotEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class Bot_Test_Randint1(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -212,9 +188,6 @@ class Bot_Test_Randint1(unittest.TestCase):
             expected = test[KEY_EXPECTED]
 
         self.assertEqual(response, expected[KEY_BOT_MSG])
-
-
-# -------
 
 
 class Bot_Test_Randint2(unittest.TestCase):
@@ -236,9 +209,6 @@ class Bot_Test_Randint2(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class Bot_Test_Randint1_Fail(unittest.TestCase):
     def setUp(self):
         self.fail_test_params = [
@@ -256,9 +226,6 @@ class Bot_Test_Randint1_Fail(unittest.TestCase):
             expected = test[KEY_EXPECTED]
 
         self.assertNotEqual(response, expected[KEY_BOT_MSG])
-
-
-# -------
 
 
 class Bot_Test_Randint2_Fail(unittest.TestCase):

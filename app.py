@@ -98,7 +98,7 @@ def on_new_message_helper(data):
     on_new_message_3(data, request.sid)
 
 
-#@socketio.on("new message input")
+# @socketio.on("new message input")
 def on_new_message(data, rsid):
     request_sid = rsid
     print("Got an event for new message input with data:", data)
@@ -108,15 +108,20 @@ def on_new_message(data, rsid):
     ]
     on_new_message_2(data, user, request_sid)
 
+
 def on_new_message_2(data, user, rsid):
     request_sid = rsid
-    db.session.add(models.Chat(user[len(user) - 1] + ": " + data["message"], request_sid))
+    db.session.add(
+        models.Chat(user[len(user) - 1] + ": " + data["message"], request_sid)
+    )
     db.session.commit()
 
     findUrl(data["message"], request_sid)
-    
+
+
 def on_new_message_3(data, rsid):
     from chatBot import bot
+
     request_sid = rsid
 
     if bot(data):

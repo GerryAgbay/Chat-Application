@@ -7,7 +7,7 @@ export function Content() {
   const [messages, setMessages] = React.useState([]);
   const [userCount, setUserCount] = React.useState(0);
   function updateMessages(data) {
-    console.log('Received messages from server: ' + data.allMessages);
+    console.log(`Received messages from server: ${data.allMessages}`);
     setMessages(data.allMessages);
   }
   function getNewMessages() {
@@ -19,7 +19,7 @@ export function Content() {
     });
   }
   function updateUserCount(data) {
-    console.log('Received user count from server: ' + data.count);
+    console.log(`Received user count from server: ${data.count}`);
     setUserCount(data.count);
   }
   function getUserCount() {
@@ -51,22 +51,19 @@ export function Content() {
           img.height = '400';
           img.width = '500';
           document.getElementById('display-messages').appendChild(img);
-        }
-        else {
+        } else {
           const link = document.createElement('a');
           link.href = messageList[i];
           link.innerHTML = messageList[i];
           document.getElementById('display-messages').appendChild(link);
         }
-      }
-      else if (messageList[i].startsWith('HALFBOT: ')) {
+      } else if (messageList[i].startsWith('HALFBOT: ')) {
         const botMsg = document.createElement('botMsg');
-        botMsg.innerHTML = '<h3>' + messageList[i] + '</h3>';
+        botMsg.innerHTML = `<h3>${messageList[i]}</h3>`;
         document.getElementById('display-messages').appendChild(botMsg);
-      }
-      else {
+      } else {
         const usrMsg = document.createElement('usrMsg');
-        usrMsg.innerHTML = '<h4>' + messageList[i] + '</h4>';
+        usrMsg.innerHTML = `<h4>${messageList[i]}</h4>`;
         document.getElementById('display-messages').appendChild(usrMsg);
       }
     }
@@ -80,7 +77,9 @@ export function Content() {
       <div className="header">
         <div className="google-button"><GoogleButton /></div>
         <div className="num-users">
-          number of users: {userCount}
+          number of users:
+          {' '}
+          {userCount}
         </div>
       </div>
       <Button />

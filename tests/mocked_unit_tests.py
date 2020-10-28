@@ -42,9 +42,6 @@ class BotTestRandInt(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class MockedGetResponse:
     def __init__(self, json_data, status_code):
         self.json_data = json_data
@@ -52,9 +49,6 @@ class MockedGetResponse:
 
     def json(self):
         return self.json_data
-
-
-# -------
 
 
 class BotTestFuntranslate1(unittest.TestCase):
@@ -87,9 +81,6 @@ class BotTestFuntranslate1(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class BotTestFuntranslate2(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -118,9 +109,6 @@ class BotTestFuntranslate2(unittest.TestCase):
             response = bot(test1[KEY_INPUT])
         expected = test1[KEY_EXPECTED]
         self.assertEqual(response, expected[KEY_BOT_MSG])
-
-
-# -------
 
 
 class BotTestRandjoke1(unittest.TestCase):
@@ -163,9 +151,6 @@ class BotTestRandjoke1(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# ------
-
-
 class BotTestRandjoke2(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -205,9 +190,6 @@ class BotTestRandjoke2(unittest.TestCase):
         self.assertEqual(response, expected[KEY_BOT_MSG])
 
 
-# -------
-
-
 class Mocked_socket_emit:
     def __init__(self, emit_key, emit_value):
         self.emit_key = emit_key["key"]
@@ -216,9 +198,6 @@ class Mocked_socket_emit:
     def json(self):
         print(self.emit_key)
         return self.emit_key
-
-
-# -------
 
 
 class Test_On_Connect(unittest.TestCase):
@@ -234,12 +213,8 @@ class Test_On_Connect(unittest.TestCase):
         test = self.success_test_params[0]
         with mock.patch("app.socketio.emit", self.mocked_socket):
             response = app.on_connect()
-        expected = test[KEY_EXPECTED]
 
         self.assertEqual(response, None)
-
-
-# ------
 
 
 class Mocked_Push:
@@ -285,9 +260,6 @@ class Test_Push(unittest.TestCase):
         self.assertEqual(response, expected[EMIT_KEY])
 
 
-# ------
-
-
 class Test_On_New_Google_User(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -306,12 +278,8 @@ class Test_On_New_Google_User(unittest.TestCase):
         test = self.success_test_params[0]
         with mock.patch("app.socketio.emit", self.mocked_socket):
             response = app.on_new_google_user(test[KEY_INPUT])
-        expected = test[KEY_EXPECTED]
 
         self.assertEqual(response, None)
-
-
-# -------
 
 
 class Mocked_Push_2:
@@ -349,9 +317,6 @@ class Test_Find_Url(unittest.TestCase):
         self.assertEqual(response, expected[EMIT_KEY])
 
 
-# -------
-
-
 class Test_On_Disconnect(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
@@ -365,11 +330,9 @@ class Test_On_Disconnect(unittest.TestCase):
         test = self.success_test_params[0]
         with mock.patch("app.socketio.emit", self.mocked_socket):
             response = app.on_disconnect()
-        expected = test[KEY_EXPECTED]
 
         self.assertEqual(response, None)
-        
-#------
+
 
 class Mocked_Push_3:
     def __init__(self, name):
@@ -406,8 +369,7 @@ class Test_On_New_Message_2(unittest.TestCase):
             )
         expected = test[KEY_EXPECTED]
         self.assertEqual(response, expected[EMIT_KEY])
-        
-#------
+
 
 class Mocked_Push_4:
     def __init__(self, name):
@@ -443,6 +405,7 @@ class Test_On_New_Message_(unittest.TestCase):
             )
         expected = test[KEY_EXPECTED]
         self.assertEqual(response, expected[EMIT_KEY])
+
 
 if __name__ == "__main__":
     unittest.main()
