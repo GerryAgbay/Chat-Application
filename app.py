@@ -23,14 +23,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 
-
-def init_db(app):
-    db.init_app(app)
-    db.app = app
-    db.create_all()
-    db.session.commit()
-
-
 import models
 
 
@@ -101,26 +93,36 @@ def on_disconnect():
 
 
 @socketio.on("new message input")
-def on_new_message(data):
+def on_new_message_helper(data):
+    on_new_message(data, request.sid)
+    on_new_message_3(data, request.sid)
+
+
+#@socketio.on("new message input")
+def on_new_message(data, rsid):
+    request_sid = rsid
     print("Got an event for new message input with data:", data)
     user = [
         db_user.name
-        for db_user in db.session.query(models.AuthUser).filter_by(sid=request.sid)
+        for db_user in db.session.query(models.AuthUser).filter_by(sid=request_sid)
     ]
+    on_new_message_2(data, user, request_sid)
 
-    db.session.add(
-        models.Chat(user[len(user) - 1] + ": " + data["message"], request.sid)
-    )
+def on_new_message_2(data, user, rsid):
+    request_sid = rsid
+    db.session.add(models.Chat(user[len(user) - 1] + ": " + data["message"], request_sid))
     db.session.commit()
 
-    findUrl(data["message"], request.sid)
-
+    findUrl(data["message"], request_sid)
+    
+def on_new_message_3(data, rsid):
     from chatBot import bot
+    request_sid = rsid
 
     if bot(data):
         botName = "Halfbot"
         db.session.add(
-            models.Chat(botName.upper() + ": " + bot(data).upper(), request.sid)
+            models.Chat(botName.upper() + ": " + bot(data).upper(), request_sid)
         )
         db.session.commit()
 
@@ -135,7 +137,6 @@ def index():
 
 
 if __name__ == "__main__":
-    init_db(app)
     socketio.run(
         app,
         host=os.getenv("IP", "0.0.0.0"),

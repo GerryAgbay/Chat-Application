@@ -368,7 +368,81 @@ class Test_On_Disconnect(unittest.TestCase):
         expected = test[KEY_EXPECTED]
 
         self.assertEqual(response, None)
+        
+#------
 
+class Mocked_Push_3:
+    def __init__(self, name):
+        self.name = name
+
+    def json(self):
+        return self.name
+
+
+class Test_On_New_Message_2(unittest.TestCase):
+    def setUp(self):
+        self.success_test_params = [
+            {
+                KEY_INPUT: {
+                    "name": "Gerry",
+                    "message": "This is a new message",
+                },
+                KEY_EXPECTED: {
+                    EMIT_KEY: None,
+                },
+            }
+        ]
+
+    def mocked_add(self, name):
+        return Mocked_Push_3(name)
+
+    def test_push_user(self):
+        test = self.success_test_params[0]
+        with mock.patch("app.db.session.add", self.mocked_add):
+            response = app.on_new_message_2(
+                test[KEY_INPUT],
+                ["user1", "user2", "user3"],
+                "123456",
+            )
+        expected = test[KEY_EXPECTED]
+        self.assertEqual(response, expected[EMIT_KEY])
+        
+#------
+
+class Mocked_Push_4:
+    def __init__(self, name):
+        self.name = name
+
+    def json(self):
+        return self.name
+
+
+class Test_On_New_Message_(unittest.TestCase):
+    def setUp(self):
+        self.success_test_params = [
+            {
+                KEY_INPUT: {
+                    "name": "Gerry",
+                    "message": "!! help",
+                },
+                KEY_EXPECTED: {
+                    EMIT_KEY: None,
+                },
+            }
+        ]
+
+    def mocked_add(self, name):
+        return Mocked_Push_4(name)
+
+    def test_push_user(self):
+        test = self.success_test_params[0]
+        with mock.patch("app.db.session.add", self.mocked_add):
+            response = app.on_new_message_3(
+                test[KEY_INPUT],
+                "123456",
+            )
+        expected = test[KEY_EXPECTED]
+        self.assertEqual(response, expected[EMIT_KEY])
 
 if __name__ == "__main__":
     unittest.main()
